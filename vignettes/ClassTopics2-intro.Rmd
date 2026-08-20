@@ -1,8 +1,8 @@
 ---
-title: "Introduction to ClassTopics"
+title: "Introduction to ClassTopics2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to ClassTopics}
+  %\VignetteIndexEntry{Introduction to ClassTopics2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-`ClassTopics` fits a **supervised topic model** to count data (for example,
+`ClassTopics2` fits a **supervised topic model** to count data (for example,
 gene expression counts) together with a binary or categorical response. It
 combines two components, estimated jointly:
 
@@ -47,7 +47,7 @@ This vignette walks through:
 ## Setup
 
 ```{r setup}
-library(ClassTopics)
+library(ClassTopics2)
 ```
 
 `ClassTopics` requires a working `cmdstanr` installation. If you haven't
@@ -59,7 +59,7 @@ cmdstanr::install_cmdstan()
 ```
 
 This is a one-time setup per machine. The Stan models bundled with
-`ClassTopics` are compiled automatically the first time you call a fitting
+`ClassTopics2` are compiled automatically the first time you call a fitting
 function, and the compiled executables are cached and reused afterwards.
 
 ## Simulating example data

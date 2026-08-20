@@ -1,8 +1,8 @@
 # =============================================================================
-# ClassTopics S4 class definitions
+# ClassTopics2 S4 class definitions
 #
 # This file defines the S4 classes used to represent the output of
-# ClassTopics's model-fitting, prediction, and cross-validation functions.
+# ClassTopics2's model-fitting, prediction, and cross-validation functions.
 #
 #   CTparameter   - a single model parameter (theta, beta, or eta) reported
 #                    as a posterior mean matrix with a credible interval

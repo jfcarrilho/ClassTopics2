@@ -1,10 +1,10 @@
-# ClassTopics: Supervised Topic Models for Binary or Categorical Response Prediction via Stan
+# ClassTopics2: Supervised Topic Models for Binary or Categorical Response Prediction via Stan
 
 <!-- badges: start -->
 <!-- [![R-CMD-check](https://github.com/jfcarrilho/ClassTopics/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jfcarrilho/ClassTopics/actions/workflows/R-CMD-check.yaml) -->
 <!-- badges: end -->
 
-`ClassTopics` fits supervised topic models to count data (e.g. gene
+`ClassTopics2` fits supervised topic models to count data (e.g. gene
 expression) jointly with a binary or categorical response. It combines
 non-negative matrix factorization (NMF) with a supervised latent Dirichlet
 allocation (LDA)-style reparameterization, estimated via full Bayesian
@@ -23,16 +23,16 @@ The model jointly learns:
 
 ## Installation
 
-`ClassTopics` is not on CRAN. Install the development version from GitHub:
+`ClassTopics2` is not on CRAN. Install the development version from GitHub:
 
 ```r
 # install.packages("pak")
-pak::pak("jfcarrilho/ClassTopics")
+pak::pak("jfcarrilho/ClassTopics2")
 ```
 
 ### Stan / cmdstanr setup
 
-`ClassTopics` fits its models with [`cmdstanr`](https://mc-stan.org/cmdstanr/),
+`ClassTopics2` fits its models with [`cmdstanr`](https://mc-stan.org/cmdstanr/),
 which is not on CRAN and must be installed separately:
 
 ```r
@@ -41,14 +41,14 @@ cmdstanr::install_cmdstan()
 ```
 
 You only need to do this once per machine. The first time you call any
-`ClassTopics` fitting function, the package's bundled Stan models are
+`ClassTopics2` fitting function, the package's bundled Stan models are
 compiled automatically and the resulting executables are cached for reuse
 on subsequent calls -- you do not need to compile anything by hand.
 
 ## Quick example
 
 ```r
-library(ClassTopics)
+library(ClassTopics2)
 
 # counts:   a D x V matrix of non-negative counts (observations x variables)
 # response: a length-D factor/character vector with 2+ categories
@@ -82,12 +82,12 @@ cvTestAccuracy(cv_fit)
 overfittingGap(cv_fit)
 ```
 
-See `vignette("ClassTopics-intro")` for a complete walkthrough, including
+See `vignette("ClassTopics2-intro")` for a complete walkthrough, including
 prediction on new samples and interpreting model output.
 
 ## Learning more
 
-- `vignette("ClassTopics-intro")` -- full workflow: fitting, cross-validation,
+- `vignette("ClassTopics2-intro")` -- full workflow: fitting, cross-validation,
   prediction, and interpreting results
 - `?ClassTopics` -- main fitting function
 - `?cv_ClassTopics` -- k-fold cross-validation
@@ -95,7 +95,7 @@ prediction on new samples and interpreting model output.
 
 ## Citation
 
-If you use `ClassTopics` in your research, please cite the associated
+If you use `ClassTopics2` in your research, please cite the associated
 publication (details to be added).
 
 ## License

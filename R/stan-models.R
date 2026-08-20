@@ -26,7 +26,7 @@
 
   path <- system.file(
     "stan", paste0(model_name, ".stan"),
-    package = "ClassTopics",
+    package = "ClassTopics2",
     mustWork = FALSE
   )
 
@@ -36,7 +36,7 @@
         "Could not find '%s.stan' inside the installed package. ",
         model_name
       ),
-      "This usually means ClassTopics was not installed correctly ",
+      "This usually means ClassTopics2 was not installed correctly ",
       "(inst/stan files missing). Try reinstalling the package.",
       call. = FALSE
     )
@@ -56,8 +56,8 @@
 .stan_cache_dir <- function() {
 
   cache_dir <- tryCatch(
-    tools::R_user_dir("ClassTopics", which = "cache"),
-    error = function(e) file.path(tempdir(), "ClassTopics_stan_cache")
+    tools::R_user_dir("ClassTopics2", which = "cache"),
+    error = function(e) file.path(tempdir(), "ClassTopics2_stan_cache")
   )
 
   if (!dir.exists(cache_dir)) {

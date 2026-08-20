@@ -1,4 +1,4 @@
 library(testthat)
-library(ClassTopics)
+library(ClassTopics2)
 
-test_check("ClassTopics")
+test_check("ClassTopics2")
