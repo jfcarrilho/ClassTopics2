@@ -705,12 +705,10 @@ predict_ClassTopics_EM <- function(
   eta_means_mat <- matrix(colMeans(posterior::E(draws$eta)),
                           nrow = C, ncol = K_topics, byrow = TRUE)
   
-  beta_fold <- posterior::E(draws$beta)
   W_pred <- posterior::E(draws$W)
   eta_fold <- posterior::E(draws$eta) - eta_means_mat
   
   y_pred_mode <- posterior::modal_category(draws$y_pred)
-  response_probs_mode <- posterior::E(draws$response_probs)
   
   # Train accuracy
   fold_tr_acc <- mean(response_levels[y_pred_mode] == response[train_indices])
@@ -820,8 +818,7 @@ predict_ClassTopics_EM <- function(
 #' @param pred_n_acc list containing the results of the previously obtained
 #'                   classification results with .cv_ClassTopics_fold_by_fold
 #' @param final_model argument that may receive the estimated full model
-#'                    obtained with ClassTopics. If \code{NULL} (default), said model is
-#'                    fitted internally
+#'                    obtained with ClassTopics.
 #' @param cores number of CPU cores (default = \code{3})
 #' @param chains number of chains to run (default = \code{3})
 #' @param seed numeric seed for reproducibility (default = \code{123})
@@ -847,14 +844,8 @@ predict_ClassTopics_EM <- function(
     response,
     folds,
     pred_n_acc,
-    final_model = NULL,
-    chains = 3,
-    cores = 3,
-    seed = 123,
-    control = list(adapt_delta = 0.8,
-                   max_treedepth = 10),
-    ...){
-  
+    final_model
+  ){
   
   response <- as.factor(response)
   
@@ -928,22 +919,6 @@ predict_ClassTopics_EM <- function(
                 response_levels[i],
                 mean_test_class_acc[i] * 100,
                 sd_test_class_acc[i] * 100))
-  }
-  
-  if(is.null(final_model)){
-    # Final model on the full dataset for interpretation
-    cat("\n=== Fitting Final Model on Full Dataset ===\n")
-    cat("(This model is for interpretation; CV accuracy reported above)\n")
-    
-    final_model <- ClassTopics(
-      counts = counts,
-      response = response,
-      chains = chains,
-      cores = cores,
-      control = control,
-      seed = seed,
-      ...
-    )
   }
   
   with(pred_n_acc, return(cvCTprediction_plusfm(
