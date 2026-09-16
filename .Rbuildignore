@@ -4,3 +4,4 @@
 ^\.github$
 ^\.git$
 ^LICENSE\.md$
+^simulations\_draft\.R$
