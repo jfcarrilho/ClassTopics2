@@ -91,7 +91,8 @@
 #' @param betadir logical, controls whether beta is estimated with Dirichlet
 #'                prior (default = \code{TRUE})
 #' @param alpha_beta numeric hyperparameter of the symmetric Dirichlet
-#'                   distribution if \code{betadir = TRUE} (default = 0.05)
+#'                   distribution if \code{betadir = TRUE}; prior shape of
+#'                   the topic-variables matrix otherwise (default = 0.05)
 #' @param lambda_ridge numeric ridge-penalty weight applied to the
 #'                     regression coefficients \code{eta} (default = \code{0},
 #'                     i.e. no ridge penalty)
@@ -241,14 +242,14 @@ ClassTopics <- function(counts,
   
   mu_target <- sqrt(mean(counts) / K)
   
-  rate <- shape / mu_target
+  rate <- 1 / mu_target
   
   stan_init <- lapply(1:chains, function(chain){
     set.seed(chain)
     
     # Fresh random initialisation for each chain
-    H0 <- matrix(rgamma(D * K, shape = shape, rate = rate), D, K)
-    W0 <- matrix(rgamma(K * V, shape = shape, rate = rate), K, V)
+    H0 <- matrix(rgamma(D * K, shape = shape, rate = shape * rate), D, K)
+    W0 <- matrix(rgamma(K * V, shape = alpha_beta, rate = rate), K, V)
     
     init <- .em_nmf(
       H = H0,
@@ -270,12 +271,12 @@ ClassTopics <- function(counts,
     y = response_int,
     shape = shape,
     rate = rate,
+    alpha_beta = alpha_beta,
     sigma_eta = sigma_eta,
     lambda_ridge_eta = lambda_ridge
   )
   
   if(betadir){
-    stan_data$alpha_beta <- alpha_beta
     model_name <- "model_betadir"
   }
   else{
@@ -291,11 +292,9 @@ ClassTopics <- function(counts,
     
     cat(sprintf("\nHyperparameters:\n"))
     cat(sprintf("  sigma_eta: %.3f\n", sigma_eta))
+    cat(sprintf("  alpha_beta: %.3f\n", alpha_beta))
     cat(sprintf("  shape: %.3f\n", shape))
     cat(sprintf("  rate: %.3f\n", rate))
-    if(betadir){
-      cat(sprintf("  alpha_beta: %.3f\n", alpha_beta))
-    }
   }
   
   mod <- .get_stan_model(model_name)
@@ -671,7 +670,8 @@ predict_ClassTopics_EM <- function(
 #' @param betadir logical, controls whether beta is estimated with Dirichlet
 #'                prior (default = \code{TRUE}) or, if \code{FALSE}, with Gamma prior
 #' @param alpha_beta numeric hyperparameter of the symmetric Dirichlet
-#'                   distribution if \code{betadir} = TRUE] (default = \code{0.05})
+#'                   distribution if \code{betadir = TRUE}; prior shape of
+#'                   the topic-variables matrix otherwise (default = 0.05)
 #' @param seed numeric seed for reproducibility (default = \code{123})
 #' @param verbose_per_fold Logical, print details for each fold (default: \code{TRUE})
 #' @param iter_warmup number of warm-up iterations for each chain
@@ -1098,7 +1098,8 @@ predict_ClassTopics_EM <- function(
 #' @param betadir logical, controls whether beta is estimated with Dirichlet
 #'                prior (default = `TRUE`) or, if `FALSE`, with Gamma prior
 #' @param alpha_beta numeric hyperparameter of the symmetric Dirichlet
-#'                   distribution if `betadir = TRUE` (default = 0.05)
+#'                   distribution if \code{betadir = TRUE}; prior shape of
+#'                   the topic-variables matrix otherwise (default = 0.05)
 #' @param seed numeric seed for reproducibility (default = 123)
 #' @param verbose_per_fold Logical, print details for each fold (default: TRUE)
 #' @param iter_warmup number of warm-up iterations for each chain
@@ -1651,8 +1652,8 @@ cv_ClassTopics <- function(
       seed = seed,
       sigma_eta = sigma_eta,
       shape = shape,
-      alpha_beta = alpha_beta,
       betadir = betadir,
+      alpha_beta = alpha_beta,
       iter_warmup = iter_warmup,
       iter_sampling = iter_sampling,
       n_iter_EM = n_iter_EM,
