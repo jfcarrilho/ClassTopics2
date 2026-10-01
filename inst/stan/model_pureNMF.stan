@@ -167,16 +167,6 @@ model{
   }
   
   target += nmf_weight * (dot_product(nz_counts, log(lambda_nz)) - sum(lambda));
-  
-  // for(d in 1:D){
-  //   // target += -dot_product(H[d, :], W * rep_vector(1.0, V)) / root_median_N;
-  //   for(v in 1:V){
-  //     if (counts[d, v] > 0){
-  //       // real lambda_dv = dot_product(H[d, :], W[:, v]);
-  //       target += counts[d, v] * log(lambda[d, v]) / root_median_N;
-  //     }
-  //   }
-  // }
 
   // ------------------------------------------------------------------
   // Supervised likelihood: categorical with softmax linear predictor
@@ -184,10 +174,6 @@ model{
   // ------------------------------------------------------------------
   
   for(d in 1:D){
-    // vector[C] linear_pred = eta * theta[d, :]';
-    // for (c in 1:C){
-    //   linear_pred[c] = dot_product(eta[c, :], theta[d, :]);
-    // }
     target += sup_weight * categorical_logit_lpmf(y[d] | linear_pred_mat[:, d]);
   }
 }
@@ -213,22 +199,9 @@ generated quantities{
 
   // NMF log-likelihood (sparse: skip zero counts still accounting for -lambda)
   var_log_lik += dot_product(nz_counts, log(lambda_nz)) - sum(lambda);
-  // for(d in 1:D){
-  //   //var_log_lik += -dot_product(H[d, :], W * rep_vector(1.0, V));
-  //   for(v in 1:V){
-  //     if (counts[d, v] > 0){
-  //       //real lambda_dv = dot_product(H[d, :], W[:, v]);
-  //       var_log_lik += counts[d, v] * log(lambda[d, v]);
-  //     }
-  //   }
-  // }
   
   // Categorical log-likelihood and predictions
   for(d in 1:D){
-    // vector[C] linear_pred = eta * theta[d, :]';
-    // for(c in 1:C){
-    //   linear_pred[c] = dot_product(eta[c, :], theta[d, :]);
-    // }
     response_probs[d] = softmax(linear_pred_mat[:, d]);
     y_pred[d] = categorical_logit_rng(linear_pred_mat[:, d]);
     response_log_lik += categorical_logit_lpmf(y[d] | linear_pred_mat[:, d]);
@@ -246,8 +219,6 @@ generated quantities{
       if(k1 == k2){
         topic_correlations[k1, k2] = 1.0;
       } else {
-        // real mean1 = mean(beta[k1, :]);
-        // real mean2 = mean(beta[k2, :]);
         vector[V] dev1 = beta[k1] - 1.0 / V;
         vector[V] dev2 = beta[k2] - 1.0 / V;
         real cov12 = dot_product(dev1, dev2);
