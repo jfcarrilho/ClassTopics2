@@ -129,7 +129,7 @@ model{
     lambda_nz[i] = lambda[nz_d[i], nz_v[i]];
   }
   
-  target += nmf_weight * (dot_product(nz_counts, log(lambda_nz)) - sum(lambda));
+  target += dot_product(nz_counts, log(lambda_nz)) - sum(lambda);
 }
 
 generated quantities{
