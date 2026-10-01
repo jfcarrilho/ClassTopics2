@@ -119,7 +119,7 @@ transformed parameters{
   //   (see Carbonetto et al. 2021).
   //   Each row sums to 1: beta[k, v] = W[k, v] / u[k]
   // ------------------------------------------------------------------
-  matrix[K, V] beta;
+  matrix[K, V] beta;            // variable-topic weights: K x V
   for(k in 1:K){
     beta[k, :] = W[k, :] / u[k];
   }
@@ -246,8 +246,8 @@ generated quantities{
       } else {
         // real mean1 = mean(beta[k1, :]);
         // real mean2 = mean(beta[k2, :]);
-        vector[V] dev1 = beta[k1] - 1.0 / V;
-        vector[V] dev2 = beta[k2] - 1.0 / V;
+        vector[V] dev1 = beta[k1, :]' - 1.0 / V;
+        vector[V] dev2 = beta[k2, :]' - 1.0 / V;
         real cov12 = dot_product(dev1, dev2);
         real var1 = dot_self(dev1);
         real var2 = dot_self(dev2);
