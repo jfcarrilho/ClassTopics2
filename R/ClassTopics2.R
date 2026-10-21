@@ -680,7 +680,6 @@ predict_ClassTopics_EM <- function(
 #' @param K_topics number of topics to be modeled (default = \code{3})
 #' @param shape scalar prior shape of the observation-topic coefficients
 #'              matrix (default = 4)
-#' @param shape_test scalar prior shape of the H matrix on test sets (default = 4)
 #' @param sigma_eta scalar prior sd of the coefficients of the eta matrix
 #'                  (default = 0.5)
 #' @param betadir logical, controls whether beta is estimated with Dirichlet
@@ -735,7 +734,6 @@ predict_ClassTopics_EM <- function(
     fold, 
     K_topics = 3,
     shape = 4,
-    shape_test = 1,
     sigma_eta = 0.5,
     betadir = TRUE,
     alpha_beta = 0.05,
@@ -852,7 +850,7 @@ predict_ClassTopics_EM <- function(
       W = W_pred,
       eta = eta_fold,
       response_test = response[test_indices],
-      shape = shape_test,
+      shape = shape,
       seed = seed,
       iter_warmup = iter_warmup,
       iter_sampling = iter_sampling,
@@ -869,7 +867,7 @@ predict_ClassTopics_EM <- function(
                            drop = FALSE],
       W = W_pred,
       eta = eta_fold,
-      shape = shape_test,
+      shape = shape,
       response_test = response[test_indices],
       n_iter_EM = n_iter_EM_test
     )
@@ -1119,7 +1117,6 @@ predict_ClassTopics_EM <- function(
 #' @param K_topics number of topics to be modeled (default = 3)
 #' @param shape scalar prior shape of the observation-topic coefficients
 #'              matrix (default = 4)
-#' @param shape_test scalar prior shape of the H matrix on test sets (default = 4)
 #' @param sigma_eta scalar prior sd of the coefficients of the eta matrix
 #'                  (default = 0.5)
 #' @param betadir logical, controls whether beta is estimated with Dirichlet
@@ -1173,7 +1170,6 @@ predict_ClassTopics_EM <- function(
     k_folds = 5,
     K_topics = 3,
     shape = 4,
-    shape_test = 1,
     sigma_eta = 0.5,
     betadir = TRUE,
     alpha_beta = 0.05,
@@ -1234,13 +1230,14 @@ predict_ClassTopics_EM <- function(
     train_counts <- counts[train_indices,
                            nonzero_train_cols,
                            drop = FALSE]
-  
+    
     # Fit on training set
     fit_fold <- ClassTopics(
       counts = train_counts,
       response = response[train_indices],
       K = K_topics,
       sigma_eta = sigma_eta,
+      shape = shape,
       betadir = betadir,
       alpha_beta = alpha_beta,
       seed = seed,
@@ -1300,12 +1297,14 @@ predict_ClassTopics_EM <- function(
         W = W_pred,
         eta = eta_fold,
         response_test = response[test_indices],
-        shape = shape_test,
+        shape = shape,
         seed = seed,
         iter_warmup = iter_warmup,
         iter_sampling = iter_sampling,
-        n_iter_EM = n_iter_EM,
-        ...
+        n_iter_EM = n_iter_EM_test,
+        chains = chains,
+        cores = cores,
+        control = control
       )
     }
     else{
@@ -1315,7 +1314,7 @@ predict_ClassTopics_EM <- function(
                              drop = FALSE],
         W = W_pred,
         eta = eta_fold,
-        shape = shape_test,
+        shape = shape,
         response_test = response[test_indices],
         n_iter_EM = n_iter_EM_test
       )
@@ -1448,8 +1447,9 @@ predict_ClassTopics_EM <- function(
     K = K_topics,
     seed = seed,
     sigma_eta = sigma_eta,
-    alpha_beta = alpha_beta,
+    shape = shape,
     betadir = betadir,
+    alpha_beta = alpha_beta,
     iter_warmup = iter_warmup,
     iter_sampling = iter_sampling,
     n_iter_EM = n_iter_EM,
@@ -1514,7 +1514,6 @@ predict_ClassTopics_EM <- function(
 #' @param shape scalar prior shape of the observation-topic coefficients
 #'              matrix (default = 4)
 #' @param sigma_eta scalar prior sd of the coefficients of the eta matrix
-#' @param shape_test scalar prior shape of the H matrix on test sets (default = 4)
 #' @param betadir logical, controls whether beta is estimated with Dirichlet
 #'                prior (default = `TRUE`) or, if `FALSE`, with Gamma prior
 #' @param alpha_beta numeric hyperparameter of the symmetric Dirichlet
@@ -1589,7 +1588,6 @@ cv_ClassTopics <- function(
     k_folds = 5,
     K_topics = 3,
     shape = 4,
-    shape_test = 1,
     sigma_eta = 0.5,
     betadir = TRUE,
     alpha_beta = 0.05,
@@ -1756,7 +1754,6 @@ cv_ClassTopics <- function(
           K_topics = K_topics,
           sigma_eta = sigma_eta,
           shape = shape,
-          shape_test = shape_test,
           betadir = betadir,
           alpha_beta = alpha_beta,
           seed = seed,
