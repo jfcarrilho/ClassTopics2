@@ -36,7 +36,7 @@ remotes::install_github("jfcarrilho/ClassTopics2")
 which is not on CRAN and must be installed separately:
 
 ```r
-install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev/", getOption("repos")))
 cmdstanr::install_cmdstan()
 ```
 
